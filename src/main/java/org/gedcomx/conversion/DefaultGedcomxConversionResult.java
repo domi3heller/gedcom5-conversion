@@ -24,7 +24,6 @@ import org.gedcomx.source.SourceDescription;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
 public class DefaultGedcomxConversionResult implements GedcomxConversionResult {
 
   private Gedcomx dataset = new Gedcomx();

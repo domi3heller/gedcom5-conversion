@@ -14,7 +14,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
-
 public class PersonsGenderTest {
   private MappingConfig mappingConfig = new MappingConfig("intputFile.ged", true);
   private Gedcom gedcom;
@@ -29,7 +28,6 @@ public class PersonsGenderTest {
     assertNotNull(gedcom);
     assertNotNull(gedcom.getPeople());
   }
-
 
   @Test
   public void testToPerson1() throws Exception {

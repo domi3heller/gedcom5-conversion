@@ -71,6 +71,7 @@ public class PersonsMapperTest {
 
   private static final class PersonCountingPostProcessor implements PostProcessor {
     private int personCount = 0;
+
     @Override
     public void postProcessPerson(Person gedcomPerson, org.gedcomx.conclusion.Person gedxPerson) {
       personCount++;

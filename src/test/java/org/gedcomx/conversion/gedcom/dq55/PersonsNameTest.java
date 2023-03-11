@@ -21,7 +21,6 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-
 public class PersonsNameTest {
   private MappingConfig mappingConfig = new MappingConfig("intputFile.ged", true);
   private Gedcom gedcom;

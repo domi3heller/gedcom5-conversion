@@ -40,7 +40,6 @@ import org.slf4j.Marker;
 
 import org.familysearch.platform.ordinances.Ordinance;
 
-
 public class FamilyMapper {
   private static final Logger logger = LoggerFactory.getLogger(CommonMapper.class);
 
@@ -63,9 +62,9 @@ public class FamilyMapper {
     String wifeId = (wives.size() > 0) ? mappingConfig.createId(wives.get(0).getRef()) : null;
     Relationship coupleRelationship = null;
 
-    Date lastModified = CommonMapper.toDate(dqFamily.getChange()); //todo: set the timestamp on the attribution?
+    Date lastModified = CommonMapper.toDate(dqFamily.getChange()); // todo: set the timestamp on the attribution?
 
-    if ( husbandId != null && wifeId != null) {
+    if (husbandId != null && wifeId != null) {
       coupleRelationship = toRelationship(gedxFamilyId, husbandId, wifeId, RelationshipType.Couple);
       result.addRelationship(coupleRelationship);
     }
@@ -103,7 +102,9 @@ public class FamilyMapper {
         Fact fact = FactMapper.toFact(eventFact, result);
         coupleRelationship.addFact(fact);
       } else {
-        logger.warn(ConversionContext.getContext(), "The GEDCOM X converter only supports the {} fact in the presence of a couple relationship.", eventFact.getTag());
+        logger.warn(ConversionContext.getContext(),
+            "The GEDCOM X converter only supports the {} fact in the presence of a couple relationship.",
+            eventFact.getTag());
       }
 
       ConversionContext.removeReference(factContext);
@@ -114,7 +115,9 @@ public class FamilyMapper {
     } else {
       int size = dqFamily.getSourceCitations().size();
       if (size > 0) {
-        logger.warn(ConversionContext.getContext(), "The GEDCOM X converter only supports a source citation(s) in the presence of a couple relationship; {} source citation(s) ignored.", size);
+        logger.warn(ConversionContext.getContext(),
+            "The GEDCOM X converter only supports a source citation(s) in the presence of a couple relationship; {} source citation(s) ignored.",
+            size);
       }
     }
 
@@ -125,12 +128,13 @@ public class FamilyMapper {
 
       if (coupleRelationship != null) {
         Fact ordinance = FactMapper.toOrdinance(ldsOrdinance);
-        if(ordinance != null) {
+        if (ordinance != null) {
           coupleRelationship.addFact(ordinance);
         }
-      }
-      else {
-        logger.warn(ConversionContext.getContext(), "The GEDCOM X converter only supports the {} ordinance in the presence of a couple relationship.", ldsOrdinance.getTag());
+      } else {
+        logger.warn(ConversionContext.getContext(),
+            "The GEDCOM X converter only supports the {} ordinance in the presence of a couple relationship.",
+            ldsOrdinance.getTag());
       }
 
       ConversionContext.removeReference(ordinanceContext);
@@ -143,7 +147,8 @@ public class FamilyMapper {
 
     int cntMedia = dqFamily.getMedia().size() + dqFamily.getMediaRefs().size();
     if (cntMedia > 0) {
-      logger.warn(ConversionContext.getContext(), "Did not process {} media items or references to media items.", cntMedia);
+      logger.warn(ConversionContext.getContext(), "Did not process {} media items or references to media items.",
+          cntMedia);
     }
 
     for (String refNum : dqFamily.getReferenceNumbers()) {
@@ -166,9 +171,10 @@ public class FamilyMapper {
 
     if (dqFamily.getExtensions().size() > 0) {
       for (String extensionCategory : dqFamily.getExtensions().keySet()) {
-        for (GedcomTag tag : ((List<GedcomTag>)dqFamily.getExtension(extensionCategory))) {
+        for (GedcomTag tag : ((List<GedcomTag>) dqFamily.getExtension(extensionCategory))) {
           logger.warn(ConversionContext.getContext(), "Unsupported ({}): {}", extensionCategory, tag);
-          // DATA tag (and subordinates) in GEDCOM 5.5. SOURCE_RECORD not being looked for or parsed by DallanQ code
+          // DATA tag (and subordinates) in GEDCOM 5.5. SOURCE_RECORD not being looked for
+          // or parsed by DallanQ code
         }
       }
     }
@@ -178,13 +184,18 @@ public class FamilyMapper {
 
   /**
    * Creates a GEDCOM X relationship.
-   * @param familyId  the GEDCOM 5.5 identifier associated with the family to which this relationship belongs
-   * @param personId1  the GEDCOM 5.5 identifier associated with the person 1
-   * @param personId2  the GEDCOM 5.5 identifier associated with the person 1
-   * @param relationshipType  the relationship type
+   * 
+   * @param familyId         the GEDCOM 5.5 identifier associated with the family
+   *                         to which this relationship belongs
+   * @param personId1        the GEDCOM 5.5 identifier associated with the person
+   *                         1
+   * @param personId2        the GEDCOM 5.5 identifier associated with the person
+   *                         1
+   * @param relationshipType the relationship type
    * @return relationship that was added
    */
-  private Relationship toRelationship(String familyId, String personId1, String personId2, RelationshipType relationshipType) {
+  private Relationship toRelationship(String familyId, String personId1, String personId2,
+      RelationshipType relationshipType) {
     Relationship relationship = new Relationship();
 
     relationship.setKnownType(relationshipType);
@@ -197,14 +208,14 @@ public class FamilyMapper {
 
   private String createRelationshipId(String familyId, String personId1, String personId2) {
     if (mappingConfig.isIncludeFilenameInIds()) {
-      // We don't want to repeat the file name three times, so remove it from the person IDs
+      // We don't want to repeat the file name three times, so remove it from the
+      // person IDs
       String shortPersonId1 = personId1.substring(personId1.indexOf(':') + 1);
       String shortPersonId2 = personId2.substring(personId2.indexOf(':') + 1);
       return familyId + '-' + shortPersonId1 + '-' + shortPersonId2;
     }
     return familyId + '-' + personId1 + '-' + personId2;
   }
-
 
   private void addFacts(Relationship gedxRelationship, String ged5FamilyId, List<ParentFamilyRef> childToFamilyLinks) {
     for (ParentFamilyRef ref : childToFamilyLinks) {
@@ -225,7 +236,8 @@ public class FamilyMapper {
             fact.setKnownType(FactType.FosterParent);
             gedxRelationship.addFact(fact);
           } else {
-            logger.warn(ConversionContext.getContext(), "Information designating this relationship as \"{}\" was dropped.", ref.getRelationshipType());
+            logger.warn(ConversionContext.getContext(),
+                "Information designating this relationship as \"{}\" was dropped.", ref.getRelationshipType());
           }
         }
       }

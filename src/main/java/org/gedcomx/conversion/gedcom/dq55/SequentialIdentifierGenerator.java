@@ -17,7 +17,6 @@ package org.gedcomx.conversion.gedcom.dq55;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-
 public class SequentialIdentifierGenerator {
 
   private static AtomicLong lastId = new AtomicLong(0);
@@ -30,6 +29,6 @@ public class SequentialIdentifierGenerator {
     lastId.set(0);
   }
 
-  private SequentialIdentifierGenerator() { } // added to remove "major" sonar warning
-                                              // formatted to minimize impact on code coverage metrics
+  private SequentialIdentifierGenerator() {
+  }
 }

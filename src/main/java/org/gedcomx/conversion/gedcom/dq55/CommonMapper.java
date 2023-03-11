@@ -42,7 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
-
 public class CommonMapper {
   private static final Logger logger = LoggerFactory.getLogger(CommonMapper.class);
   private static final String PARSEFORMAT_D_MMM_YY = "d MMM yy";
@@ -52,16 +51,17 @@ public class CommonMapper {
 
   private static final List<String> CHAN_DATE_ONLY_PARSE_PATTERNS = Arrays.asList(PARSEFORMAT_D_MMM_YY);
   private static final List<String> CHAN_DATE_TIME_PARSE_PATTERNS = Arrays.asList(
-      PARSEFORMAT_D_MMM_YY + ' ' + PARSEFORMAT_HH_MM + PARSEFORMAT_SS + PARSEFORMAT_SSS
-    , PARSEFORMAT_D_MMM_YY + ' ' + PARSEFORMAT_HH_MM + PARSEFORMAT_SS
-    , PARSEFORMAT_D_MMM_YY + ' ' + PARSEFORMAT_HH_MM);
+      PARSEFORMAT_D_MMM_YY + ' ' + PARSEFORMAT_HH_MM + PARSEFORMAT_SS + PARSEFORMAT_SSS,
+      PARSEFORMAT_D_MMM_YY + ' ' + PARSEFORMAT_HH_MM + PARSEFORMAT_SS, PARSEFORMAT_D_MMM_YY + ' ' + PARSEFORMAT_HH_MM);
 
   /**
    * Create a list of GedcomX SourceReference based on the ged5 SourceCitations.
+   * 
    * @param dqSources Gedcom 5 source citations
    * @return GedcomX SourceReferences
    */
-  public static List<SourceReference> toSourcesAndSourceReferences(List<SourceCitation> dqSources, GedcomxConversionResult result) throws IOException {
+  public static List<SourceReference> toSourcesAndSourceReferences(List<SourceCitation> dqSources,
+      GedcomxConversionResult result) throws IOException {
     List<SourceReference> sourceReferences = new ArrayList<SourceReference>(dqSources.size());
 
     int index = 0;
@@ -79,7 +79,8 @@ public class CommonMapper {
         citation.setValue("");
 
         if (dqSource.getRef() != null) {
-          gedxSourceDescription.setId(dqSource.getRef() + "-" + Long.toHexString(SequentialIdentifierGenerator.getNextId()));
+          gedxSourceDescription
+              .setId(dqSource.getRef() + "-" + Long.toHexString(SequentialIdentifierGenerator.getNextId()));
 
           SourceReference componentOf = new SourceReference();
           componentOf.setDescriptionRef(URI.create(CommonMapper.getSourceDescriptionReference(dqSource.getRef())));
@@ -91,7 +92,8 @@ public class CommonMapper {
             field.setName(URI.create("gedcom5:citation-template/date"));
             field.setValue(dqSource.getDate());
             citation.getFields().add(field);
-            citation.setValue(citation.getValue() + (citation.getValue().length() > 0 ? ", " + dqSource.getDate() : dqSource.getDate()));
+            citation.setValue(citation.getValue()
+                + (citation.getValue().length() > 0 ? ", " + dqSource.getDate() : dqSource.getDate()));
           }
 
           if (dqSource.getPage() != null) {
@@ -99,7 +101,8 @@ public class CommonMapper {
             field.setName(URI.create("gedcom5:citation-template/page"));
             field.setValue(dqSource.getPage());
             citation.getFields().add(field);
-            citation.setValue(citation.getValue() + (citation.getValue().length() > 0 ? ", " + dqSource.getPage() : dqSource.getPage()));
+            citation.setValue(citation.getValue()
+                + (citation.getValue().length() > 0 ? ", " + dqSource.getPage() : dqSource.getPage()));
           }
         } else if (dqSource.getValue() != null) {
           gedxSourceDescription.setId("SOUR-" + Long.toHexString(SequentialIdentifierGenerator.getNextId()));
@@ -114,14 +117,16 @@ public class CommonMapper {
         gedxSourceReference.setDescriptionRef(URI.create(entryName));
 
         if (dqSource.getText() != null) {
-          logger.warn(ConversionContext.getContext(), "GEDCOM X does not currently support text extracted from a source.");
-          // dqSource.getText(); // see GEDCOM X issue 121 // TODO: address when the associated issue is resolved; log for now
+          logger.warn(ConversionContext.getContext(),
+              "GEDCOM X does not currently support text extracted from a source.");
+          // dqSource.getText(); // see GEDCOM X issue 121
+          // TODO: address when the associated issue is resolved; log for now
           // sourceDescriptionHasData = true;
         }
 
         ConfidenceLevel gedxConfidenceLevel = toConfidenceLevel(dqSource.getQuality());
         if (gedxConfidenceLevel != null) {
-          //todo: confidence level on source reference?
+          // todo: confidence level on source reference?
           sourceReferenceHasData = true;
         }
 
@@ -132,7 +137,8 @@ public class CommonMapper {
 
         int cntMedia = dqSource.getMedia().size() + dqSource.getMediaRefs().size();
         if (cntMedia > 0) {
-          logger.warn(ConversionContext.getContext(), "Did not process {} media items or references to media items.", cntMedia);
+          logger.warn(ConversionContext.getContext(), "Did not process {} media items or references to media items.",
+              cntMedia);
         }
 
         if (sourceDescriptionHasData) {
@@ -146,7 +152,8 @@ public class CommonMapper {
         }
 
         if ((!sourceDescriptionHasData) && (!sourceReferenceHasData)) {
-          logger.warn(ConversionContext.getContext(), "Source citation did not have any data that was mapped into GEDCOM X");
+          logger.warn(ConversionContext.getContext(),
+              "Source citation did not have any data that was mapped into GEDCOM X");
         }
       } finally {
         ConversionContext.removeReference(sourceContext);
@@ -172,7 +179,8 @@ public class CommonMapper {
   }
 
   private static java.util.Date toDate(DateTime dateTime) {
-    List<String> legitimateParsePatterns = dateTime.getTime() != null ? CHAN_DATE_TIME_PARSE_PATTERNS : CHAN_DATE_ONLY_PARSE_PATTERNS;
+    List<String> legitimateParsePatterns = dateTime.getTime() != null ? CHAN_DATE_TIME_PARSE_PATTERNS
+        : CHAN_DATE_ONLY_PARSE_PATTERNS;
 
     String dateTimeString = dateTime.getValue();
     if (dateTime.getTime() != null) {
@@ -184,9 +192,9 @@ public class CommonMapper {
       try {
         extractedDate = parseDateString(parsePattern, dateTimeString);
         break;
-      }
-      catch (ParseException e) {
-        // the parse pattern being tried did not match the string we were given; try the next one
+      } catch (ParseException e) {
+        // the parse pattern being tried did not match the string we were given; try the
+        // next one
       }
     }
 
@@ -226,9 +234,9 @@ public class CommonMapper {
     return confidenceLevel;
   }
 
-  public static java.util.Date parseDateString (String parsePattern, String value) throws ParseException {
+  public static java.util.Date parseDateString(String parsePattern, String value) throws ParseException {
     DateFormat dateFormat = DateFormat.getDateTimeInstance();
-    ((SimpleDateFormat)dateFormat).applyPattern(parsePattern);
+    ((SimpleDateFormat) dateFormat).applyPattern(parsePattern);
     return dateFormat.parse(value);
   }
 
@@ -262,12 +270,14 @@ public class CommonMapper {
 
   /**
    * Returns a GEDCOM X reference for the given person identifier.
+   * 
    * @param gedxPersonId the identifier of the GEDCOM X person
-   * @return a ResourceReference instance for the person entry of the identified person
+   * @return a ResourceReference instance for the person entry of the identified
+   *         person
    */
   public static ResourceReference toReference(String gedxPersonId) {
     ResourceReference reference = new ResourceReference();
-    reference.setResource( new URI(getPersonReference(gedxPersonId)));
+    reference.setResource(new URI(getPersonReference(gedxPersonId)));
     return reference;
   }
 
@@ -276,11 +286,12 @@ public class CommonMapper {
     return pattern.matcher(telephoneNumber).matches();
   }
 
-  public static void populateAgent(Agent agent, String id, String name, org.folg.gedcom.model.Address address, String phone, String fax, String email, String www) {
+  public static void populateAgent(Agent agent, String id, String name, org.folg.gedcom.model.Address address,
+      String phone, String fax, String email, String www) {
     agent.setId(id);
     agent.setNames(Arrays.asList(new TextValue(name)));
 
-    if(address != null) {
+    if (address != null) {
       agent.setAddresses(new ArrayList<Address>());
       Address gedxAddress = new Address();
       gedxAddress.setValue(address.getValue());
@@ -293,13 +304,12 @@ public class CommonMapper {
       gedxAddress.setStreet3(address.getAddressLine3());
       agent.getAddresses().add(gedxAddress);
 
-      if(address.getName() != null) {
+      if (address.getName() != null) {
         Marker addressContext = ConversionContext.getDetachedMarker("ADDR");
         ConversionContext.addReference(addressContext);
         try {
           logger.warn(ConversionContext.getContext(), "Ignoring extension tag for address name: {}", address.getName());
-        }
-        finally {
+        } finally {
           ConversionContext.removeReference(addressContext);
         }
       }
@@ -312,9 +322,9 @@ public class CommonMapper {
         boolean inGlobalFormat = CommonMapper.inCanonicalGlobalFormat(phone);
         String scheme = inGlobalFormat ? "tel" : "data";
         try {
-          phoneRef.setResource(URI.create(new java.net.URI(scheme, (inGlobalFormat ? phone : ",Phone: " + phone), null)));
-        }
-        catch (URISyntaxException e) {
+          phoneRef
+              .setResource(URI.create(new java.net.URI(scheme, (inGlobalFormat ? phone : ",Phone: " + phone), null)));
+        } catch (URISyntaxException e) {
           throw new RuntimeException(e);
         }
         agent.getPhones().add(phoneRef);
@@ -325,8 +335,7 @@ public class CommonMapper {
         String scheme = inGlobalFormat ? "fax" : "data";
         try {
           faxRef.setResource(URI.create(new java.net.URI(scheme, (inGlobalFormat ? fax : ",Fax: " + fax), null)));
-        }
-        catch (URISyntaxException e) {
+        } catch (URISyntaxException e) {
           throw new RuntimeException();
         }
         agent.getPhones().add(faxRef);
@@ -339,14 +348,12 @@ public class CommonMapper {
         emailRef.setResource(URI.create(java.net.URI.create("mailto:" + email).toString()));
         agent.setEmails(new ArrayList<ResourceReference>());
         agent.getEmails().add(emailRef);
-      }
-      catch (RuntimeException ex) {
+      } catch (RuntimeException ex) {
         Marker emailContext = ConversionContext.getDetachedMarker("EMAIL");
         ConversionContext.addReference(emailContext);
         try {
           logger.warn(ConversionContext.getContext(), "Invalid value for EMAIL ({}) was ignored.", email);
-        }
-        finally {
+        } finally {
           ConversionContext.removeReference(emailContext);
         }
       }
@@ -357,6 +364,6 @@ public class CommonMapper {
     }
   }
 
-  private CommonMapper() { } // added to remove "major" sonar warning
-                             // formatted to minimize impact on code coverage metrics
+  private CommonMapper() {
+  }
 }

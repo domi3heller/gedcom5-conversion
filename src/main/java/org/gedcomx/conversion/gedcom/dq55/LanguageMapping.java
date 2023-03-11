@@ -16,7 +16,8 @@
 package org.gedcomx.conversion.gedcom.dq55;
 
 /**
- * An enum to hold the mapping between Gedcom Languages and their corresponding Language Codes.
+ * An enum to hold the mapping between Gedcom Languages and their corresponding
+ * Language Codes.
  *
  * Created by andrewpk on 10/4/17.
  */
@@ -119,14 +120,14 @@ public enum LanguageMapping {
   }
 
   public static LanguageMapping fromString(String text) {
-    if(text == null) {
+    if (text == null) {
       return null;
     }
-    if(text.contains("-")) {
+    if (text.contains("-")) {
       text.replaceAll("-", "_");
     }
-    for(LanguageMapping mapping : LanguageMapping.values()) {
-      if(mapping.name().equalsIgnoreCase(text)) {
+    for (LanguageMapping mapping : LanguageMapping.values()) {
+      if (mapping.name().equalsIgnoreCase(text)) {
         return mapping;
       }
     }

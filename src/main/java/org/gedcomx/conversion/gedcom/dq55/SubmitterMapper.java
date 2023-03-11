@@ -26,7 +26,6 @@ import org.slf4j.Marker;
 import java.io.IOException;
 import java.util.List;
 
-
 public class SubmitterMapper {
   private static final Logger logger = LoggerFactory.getLogger(CommonMapper.class);
 
@@ -40,15 +39,8 @@ public class SubmitterMapper {
 
     Agent gedxContributor = new Agent();
 
-    CommonMapper.populateAgent(gedxContributor
-        , dqSubmitter.getId()
-        , dqSubmitter.getName()
-        , dqSubmitter.getAddress()
-        , dqSubmitter.getPhone()
-        , dqSubmitter.getFax()
-        , dqSubmitter.getEmail()
-        , dqSubmitter.getWww()
-      );
+    CommonMapper.populateAgent(gedxContributor, dqSubmitter.getId(), dqSubmitter.getName(), dqSubmitter.getAddress(),
+        dqSubmitter.getPhone(), dqSubmitter.getFax(), dqSubmitter.getEmail(), dqSubmitter.getWww());
 
     if (dqSubmitter.getLanguage() != null) {
       logger.warn(ConversionContext.getContext(), "LANG ({}) was ignored.", dqSubmitter.getRin());
@@ -59,14 +51,16 @@ public class SubmitterMapper {
     }
 
     if (dqSubmitter.getValue() != null) {
-      logger.warn(ConversionContext.getContext(), "Unexpected submitter value ({}) was ignored.", dqSubmitter.getValue());
+      logger.warn(ConversionContext.getContext(), "Unexpected submitter value ({}) was ignored.",
+          dqSubmitter.getValue());
     }
 
     if (dqSubmitter.getExtensions().size() > 0) {
       for (String extensionCategory : dqSubmitter.getExtensions().keySet()) {
-        for (GedcomTag tag : ((List<GedcomTag>)dqSubmitter.getExtension(extensionCategory))) {
+        for (GedcomTag tag : ((List<GedcomTag>) dqSubmitter.getExtension(extensionCategory))) {
           logger.warn(ConversionContext.getContext(), "Unsupported ({}): {}", extensionCategory, tag);
-          // DATA tag (and subordinates) in GEDCOM 5.5. SOURCE_RECORD not being looked for or parsed by DallanQ code
+          // DATA tag (and subordinates) in GEDCOM 5.5. SOURCE_RECORD not being looked for
+          // or parsed by DallanQ code
         }
       }
     }

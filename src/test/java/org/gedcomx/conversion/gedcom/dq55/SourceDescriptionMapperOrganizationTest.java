@@ -14,7 +14,6 @@ import java.net.URL;
 
 import static org.testng.Assert.*;
 
-
 public class SourceDescriptionMapperOrganizationTest {
   Gedcom gedcom;
 
@@ -56,8 +55,7 @@ public class SourceDescriptionMapperOrganizationTest {
     assertNotNull(gedxOrganization.getAddresses());
     assertEquals(gedxOrganization.getAddresses().size(), 1);
     for (Address address : gedxOrganization.getAddresses()) {
-      assertEquals(address.getValue()
-        , "5000 MyCorpCampus Dr\n" +
+      assertEquals(address.getValue(), "5000 MyCorpCampus Dr\n" +
           "Hometown, ZZ  99999\n" +
           "United States");
       assertEquals(address.getStreet(), "__ADR1_VALUE__");
@@ -156,8 +154,7 @@ public class SourceDescriptionMapperOrganizationTest {
     assertNotNull(gedxOrganization.getAddresses());
     assertEquals(gedxOrganization.getAddresses().size(), 1);
     for (Address address : gedxOrganization.getAddresses()) {
-      assertEquals(address.getValue()
-        , "55 Jones Bend Rd Ext\n" +
+      assertEquals(address.getValue(), "55 Jones Bend Rd Ext\n" +
           "Paris, TN  38242\n" +
           "United States");
       assertNull(address.getStreet());
@@ -192,7 +189,8 @@ public class SourceDescriptionMapperOrganizationTest {
 
     // WWW
     assertNotNull(gedxOrganization.getHomepage());
-    assertEquals(gedxOrganization.getHomepage().getResource().toString(), "http://www.rootsweb.ancestry.com/~tnhenry2/");
+    assertEquals(gedxOrganization.getHomepage().getResource().toString(),
+        "http://www.rootsweb.ancestry.com/~tnhenry2/");
   }
 
   @Test
@@ -223,8 +221,7 @@ public class SourceDescriptionMapperOrganizationTest {
     assertNotNull(gedxOrganization.getAddresses());
     assertEquals(gedxOrganization.getAddresses().size(), 1);
     for (Address address : gedxOrganization.getAddresses()) {
-      assertEquals(address.getValue()
-        , "208 N College Ave\n" +
+      assertEquals(address.getValue(), "208 N College Ave\n" +
           "Fayetteville, AR  72701-4202");
       assertNull(address.getStreet());
       assertNull(address.getStreet2());
@@ -390,8 +387,7 @@ public class SourceDescriptionMapperOrganizationTest {
     assertNotNull(gedxOrganization.getAddresses());
     assertEquals(gedxOrganization.getAddresses().size(), 1);
     Address address = gedxOrganization.getAddresses().get(0);
-    assertEquals(address.getValue()
-      , "300 S Rio Grande St\n" +
+    assertEquals(address.getValue(), "300 S Rio Grande St\n" +
         "Salt Lake City, UT 84101-1106");
 
     // null in this repository

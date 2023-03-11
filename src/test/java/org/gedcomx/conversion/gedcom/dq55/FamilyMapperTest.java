@@ -24,7 +24,6 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
-
 public class FamilyMapperTest {
   private MappingConfig mappingConfig = new MappingConfig("Case009-Family.ged", false);
   private Gedcom gedcom;
@@ -174,16 +173,25 @@ public class FamilyMapperTest {
 
     rel = testRelationship(0, RelationshipType.Couple, "I1006", "I1007", 17);
     PersonsFactsTest.checkFact(rel.getFacts(), FactType.NumberOfChildren, "5", null, null);
-    PersonsFactsTest.checkFact(rel.getFacts(), FactType.Annulment, null, "31 MAR 1932", "San Francisco, California, United States");
-    PersonsFactsTest.checkFact(rel.getFacts(), FactType.Engagement, null, "1 JAN 1932", "San Francisco, California, United States");
-    PersonsFactsTest.checkFact(rel.getFacts(), FactType.DivorceFiling, null, "1 APR 1932", "San Francisco, California, United States");
-    PersonsFactsTest.checkFact(rel.getFacts(), FactType.Divorce, null, "2 APR 1932", "San Francisco, California, United States");
-    PersonsFactsTest.checkFact(rel.getFacts(), FactType.MarriageBanns, null, "1 DEC 1931", "San Francisco, California, United States");
-    PersonsFactsTest.checkFact(rel.getFacts(), FactType.MarriageLicense, null, "3 MAY 1932", "San Francisco, California, United States");
-    PersonsFactsTest.checkFact(rel.getFacts(), FactType.MarriageContract, null, "4 JUL 1932", "San Francisco, California, United States");
-    PersonsFactsTest.checkFact(rel.getFacts(), FactType.Residence, null, "5 NOV 1932", "San Francisco, California, United States");
+    PersonsFactsTest.checkFact(rel.getFacts(), FactType.Annulment, null, "31 MAR 1932",
+        "San Francisco, California, United States");
+    PersonsFactsTest.checkFact(rel.getFacts(), FactType.Engagement, null, "1 JAN 1932",
+        "San Francisco, California, United States");
+    PersonsFactsTest.checkFact(rel.getFacts(), FactType.DivorceFiling, null, "1 APR 1932",
+        "San Francisco, California, United States");
+    PersonsFactsTest.checkFact(rel.getFacts(), FactType.Divorce, null, "2 APR 1932",
+        "San Francisco, California, United States");
+    PersonsFactsTest.checkFact(rel.getFacts(), FactType.MarriageBanns, null, "1 DEC 1931",
+        "San Francisco, California, United States");
+    PersonsFactsTest.checkFact(rel.getFacts(), FactType.MarriageLicense, null, "3 MAY 1932",
+        "San Francisco, California, United States");
+    PersonsFactsTest.checkFact(rel.getFacts(), FactType.MarriageContract, null, "4 JUL 1932",
+        "San Francisco, California, United States");
+    PersonsFactsTest.checkFact(rel.getFacts(), FactType.Residence, null, "5 NOV 1932",
+        "San Francisco, California, United States");
     PersonsFactsTest.checkFact(rel.getFacts(), FactType.CommonLawMarriage, null, null, null);
-    PersonsFactsTest.checkFact(rel.getFacts(), FactType.Divorce, null, "2 APR 1900", "San Francisco, California, United States");
+    PersonsFactsTest.checkFact(rel.getFacts(), FactType.Divorce, null, "2 APR 1900",
+        "San Francisco, California, United States");
     PersonsFactsTest.checkFact(rel.getFacts(), FactType.Separation, null, "DEC 1896", null);
     PersonsFactsTest.checkFact(rel.getFacts(), FactType.Separation, null, "DEC 1897", null);
     PersonsFactsTest.checkFact(rel.getFacts(), FactType.Separation, null, "DEC 1898", null);
@@ -193,19 +201,20 @@ public class FamilyMapperTest {
     if (count == 0) {
       if (list != null)
         assertEquals(list.size(), 0);
-    }
-    else {
+    } else {
       assertEquals(list.size(), count);
     }
   }
 
-  private Relationship testRelationship(int relNumber, RelationshipType relationshipType, String person1Id, String person2Id, int factCount) {
+  private Relationship testRelationship(int relNumber, RelationshipType relationshipType, String person1Id,
+      String person2Id, int factCount) {
     Relationship relationship = result.getRelationships().get(relNumber);
     testRelationship(relationship, relationshipType, person1Id, person2Id, factCount);
     return relationship;
   }
 
-  private void testRelationship(Relationship relationship, RelationshipType relationshipType, String person1Id, String person2Id, int factCount) {
+  private void testRelationship(Relationship relationship, RelationshipType relationshipType, String person1Id,
+      String person2Id, int factCount) {
     assertEquals(relationship.getKnownType(), relationshipType);
     ResourceReference person1 = relationship.getPerson1();
     ResourceReference person2 = relationship.getPerson2();
@@ -231,7 +240,7 @@ public class FamilyMapperTest {
   private void testFactExistance(Relationship relationship, FactType factType) {
     boolean found = false;
     for (Fact fact : relationship.getFacts()) {
-      if(fact.getKnownType().equals(factType)) {
+      if (fact.getKnownType().equals(factType)) {
         found = true;
         break;
       }

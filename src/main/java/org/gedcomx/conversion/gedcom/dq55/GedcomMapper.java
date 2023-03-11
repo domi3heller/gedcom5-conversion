@@ -58,7 +58,8 @@ public class GedcomMapper {
       submitterMapper.toContributor(dqGedcom.getSubmitters().get(0), result);
     }
 
-    String lang = (dqGedcom.getHeader() == null || dqGedcom.getHeader().getLanguage() == null) ? null : dqGedcom.getHeader().getLanguage();
+    String lang = (dqGedcom.getHeader() == null || dqGedcom.getHeader().getLanguage() == null) ? null
+        : dqGedcom.getHeader().getLanguage();
     LanguageMapping langMapping = LanguageMapping.fromString(lang);
     String langCode = (langMapping == null) ? null : langMapping.getLanguageCode();
     result.addLanguage(langCode);
@@ -72,7 +73,8 @@ public class GedcomMapper {
     }
   }
 
-  private void toRelationships(List<Family> dqFamilies, Gedcom dqGedcom, GedcomxConversionResult result) throws IOException {
+  private void toRelationships(List<Family> dqFamilies, Gedcom dqGedcom, GedcomxConversionResult result)
+      throws IOException {
     for (Family family : dqFamilies) {
       familyMapper.toRelationship(family, dqGedcom, result);
     }

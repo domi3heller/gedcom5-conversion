@@ -23,7 +23,6 @@ import org.gedcomx.source.SourceDescription;
 
 import java.io.IOException;
 
-
 public interface GedcomxConversionResult {
 
   Gedcomx getDataset();

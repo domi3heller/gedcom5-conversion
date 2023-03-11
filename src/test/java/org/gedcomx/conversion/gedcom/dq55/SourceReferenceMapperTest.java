@@ -35,7 +35,6 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
-
 public class SourceReferenceMapperTest {
   private MappingConfig mappingConfig = new MappingConfig("intputFile.ged", true);
   private Gedcom gedcom;
@@ -95,14 +94,19 @@ public class SourceReferenceMapperTest {
     assertNotNull(gedxSourceDescription);
     assertEquals(gedxSourceDescription.getId(), generatedId);
     assertNotNull(gedxSourceDescription.getCitation());
-    assertEquals(gedxSourceDescription.getCitation().getValue(), "31 Jan 1820, FHL INTL Film 1226427, Geboorten, 1820, No. 143");
-    assertEquals(gedxSourceDescription.getCitation().getCitationTemplate().getResource().toURI().toString(), "gedcom5:citation-template");
+    assertEquals(gedxSourceDescription.getCitation().getValue(),
+        "31 Jan 1820, FHL INTL Film 1226427, Geboorten, 1820, No. 143");
+    assertEquals(gedxSourceDescription.getCitation().getCitationTemplate().getResource().toURI().toString(),
+        "gedcom5:citation-template");
     assertNotNull(gedxSourceDescription.getCitation().getFields());
     assertEquals(gedxSourceDescription.getCitation().getFields().size(), 2);
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getName().toURI().toString(), "gedcom5:citation-template/date");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getName().toURI().toString(),
+        "gedcom5:citation-template/date");
     assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getValue(), "31 Jan 1820");
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(1).getName().toURI().toString(), "gedcom5:citation-template/page");
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(1).getValue(), "FHL INTL Film 1226427, Geboorten, 1820, No. 143");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(1).getName().toURI().toString(),
+        "gedcom5:citation-template/page");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(1).getValue(),
+        "FHL INTL Film 1226427, Geboorten, 1820, No. 143");
     assertNull(gedxSourceDescription.getAbout());
     assertNull(gedxSourceDescription.getMediator());
     assertNull(gedxSourceDescription.getSources());
@@ -148,7 +152,8 @@ public class SourceReferenceMapperTest {
     assertNotNull(gedxSourceDescription);
     assertEquals(gedxSourceDescription.getId(), generatedId);
     assertNotNull(gedxSourceDescription.getCitation());
-    assertEquals(gedxSourceDescription.getCitation().getValue(), "\"Germany, Births and Baptisms, 1558-1898,\" index, FamilySearch (https://familysearch.org/pal:/MM9.1.1/VHQB-CHW :accessed 22 May 2012), Joannes Baptista Louwart.");
+    assertEquals(gedxSourceDescription.getCitation().getValue(),
+        "\"Germany, Births and Baptisms, 1558-1898,\" index, FamilySearch (https://familysearch.org/pal:/MM9.1.1/VHQB-CHW :accessed 22 May 2012), Joannes Baptista Louwart.");
     assertNull(gedxSourceDescription.getCitation().getCitationTemplate());
     assertNotNull(gedxSourceDescription.getCitation().getFields());
     assertEquals(gedxSourceDescription.getCitation().getFields().size(), 0);
@@ -261,16 +266,17 @@ public class SourceReferenceMapperTest {
     Fact gedxFact = gedxPerson.getFacts().get(0);
     assertNotNull(gedxFact);
     assertNull(gedxFact.getSources());
-// TODO: will probably be needed when the TEXT tag starts being processed
-//    assertEquals(gedxFact.getSources().size(), 1);
-//    SourceReference gedxSourceReference = gedxFact.getSources().get(0);
-//    assertNotNull(gedxSourceReference);
-//    assertNotNull(gedxSourceReference.getSourceDescription());
-//    assertTrue(gedxSourceReference.getSourceDescription().getResource().toString().startsWith("#"));
-//    generatedId = gedxSourceReference.getSourceDescription().getResource().toString().substring(1);
-//    assertNotNull(generatedId, "5");
-//    assertNull(gedxSourceReference.getAttribution());
-//    assertNull(gedxSourceReference.getExtensionElements());
+    // TODO: will probably be needed when the TEXT tag starts being processed
+    // assertEquals(gedxFact.getSources().size(), 1);
+    // SourceReference gedxSourceReference = gedxFact.getSources().get(0);
+    // assertNotNull(gedxSourceReference);
+    // assertNotNull(gedxSourceReference.getSourceDescription());
+    // assertTrue(gedxSourceReference.getSourceDescription().getResource().toString().startsWith("#"));
+    // generatedId =
+    // gedxSourceReference.getSourceDescription().getResource().toString().substring(1);
+    // assertNotNull(generatedId, "5");
+    // assertNull(gedxSourceReference.getAttribution());
+    // assertNull(gedxSourceReference.getExtensionElements());
 
     assertNotNull(result.getSourceDescriptions());
     assertEquals(result.getSourceDescriptions().size(), 0);

@@ -18,7 +18,6 @@ import java.util.TimeZone;
 
 import static org.testng.Assert.*;
 
-
 public class SourceDescriptionMapperDescriptionTest {
   Gedcom gedcom;
 
@@ -49,18 +48,28 @@ public class SourceDescriptionMapperDescriptionTest {
     assertNotNull(gedxSourceDescription);
     assertEquals(gedxSourceDescription.getId(), "SOUR1");
     assertNotNull(gedxSourceDescription.getCitation());
-    assertEquals(gedxSourceDescription.getCitation().getValue(), "Brugge (West Vlaanderen). Burgerlijke Stand, Registers van de Burgerlijke Stand, 1796-1900, Salt Lake City, Utah : Filmed by the Genealogical Society of Utah, 1981-1995, https://www.familysearch.org/search/catalog/show?uri=http%3A%2F%2Fcatalog-search-api%3A8080%2Fwww-catalogapi-webservice%2Fitem%2F21034.");
-    assertEquals(gedxSourceDescription.getCitation().getCitationTemplate().getResource().toString(), "gedcom5:citation-template");
+    assertEquals(gedxSourceDescription.getCitation().getValue(),
+        "Brugge (West Vlaanderen). Burgerlijke Stand, Registers van de Burgerlijke Stand, 1796-1900, Salt Lake City, Utah : Filmed by the Genealogical Society of Utah, 1981-1995, https://www.familysearch.org/search/catalog/show?uri=http%3A%2F%2Fcatalog-search-api%3A8080%2Fwww-catalogapi-webservice%2Fitem%2F21034.");
+    assertEquals(gedxSourceDescription.getCitation().getCitationTemplate().getResource().toString(),
+        "gedcom5:citation-template");
     assertNotNull(gedxSourceDescription.getCitation().getFields());
     assertEquals(gedxSourceDescription.getCitation().getFields().size(), 4);
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getName().toURI().toString(), "gedcom5:citation-template/author");
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getValue(), "Brugge (West Vlaanderen). Burgerlijke Stand");
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(1).getName().toURI().toString(), "gedcom5:citation-template/title");
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(1).getValue(), "Registers van de Burgerlijke Stand, 1796-1900");
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(2).getName().toURI().toString(), "gedcom5:citation-template/publication-facts");
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(2).getValue(), "Salt Lake City, Utah : Filmed by the Genealogical Society of Utah, 1981-1995");
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(3).getName().toURI().toString(), "gedcom5:citation-template/call-number");
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(3).getValue(), "https://www.familysearch.org/search/catalog/show?uri=http%3A%2F%2Fcatalog-search-api%3A8080%2Fwww-catalogapi-webservice%2Fitem%2F21034");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getName().toURI().toString(),
+        "gedcom5:citation-template/author");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getValue(),
+        "Brugge (West Vlaanderen). Burgerlijke Stand");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(1).getName().toURI().toString(),
+        "gedcom5:citation-template/title");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(1).getValue(),
+        "Registers van de Burgerlijke Stand, 1796-1900");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(2).getName().toURI().toString(),
+        "gedcom5:citation-template/publication-facts");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(2).getValue(),
+        "Salt Lake City, Utah : Filmed by the Genealogical Society of Utah, 1981-1995");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(3).getName().toURI().toString(),
+        "gedcom5:citation-template/call-number");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(3).getValue(),
+        "https://www.familysearch.org/search/catalog/show?uri=http%3A%2F%2Fcatalog-search-api%3A8080%2Fwww-catalogapi-webservice%2Fitem%2F21034");
     assertNull(gedxSourceDescription.getAbout());
     assertEquals(gedxSourceDescription.getMediator().getResource().toURI().toString(), "#REPO1");
     assertNull(gedxSourceDescription.getSources());
@@ -68,21 +77,27 @@ public class SourceDescriptionMapperDescriptionTest {
     assertEquals(gedxSourceDescription.getTitle().getValue(), "Civil Registration");
     assertNull(gedxSourceDescription.getAttribution());
     assertNull(gedxSourceDescription.getNotes());
-//    assertNotNull(gedxSourceDescription.getNotes());
-//    assertEquals(gedxSourceDescription.getNotes().size(), 1);
-//    assertEquals(gedxSourceDescription.getNotes().get(0).getText().getValue()
-//      , "Microfilm genomen van de originele in het Gerechtshof te Brugge.\n" +
-//        "\n" +
-//        "Tekst in het Frans voor 1815.\n" +
-//        "\n" +
-//        "Met index.\n" +
-//        "\n" +
-//        "Tienjarige tafels op geboorten, huwelijken en overlijdens 1803-1813 zie Film 1226168 item 2. 1803-1813 1226169 item 1-2 1813-1823 1226173 item 2 " +
-//        "1823-1832 1226175 item 4. 1823-1832 1226176 item 1 1833-1842 1226179 item 1-2 1843-1850 1226182 item 3-4. 1850-1860 1226185 item 3. " +
-//        "1850-1860 1226236 item 1 1860-1870 1226239 item 3. 1860-1870 1226240 item 1-2 1871-1880 1358895 item 2 1881-1890 1383016 item 3. " +
-//        "Geboorten, huwelijken 1881-1890 1383017 item 1 Overlijdens 1891-1900 1383021 item 2\n" +
-//        "\n" +
-//        "Civil registration of births, marriages and deaths of Brugge, West Flanders, Belgium. Includes marriage proclamations, indexes, and supplements. Text in French before 1815.");
+    // assertNotNull(gedxSourceDescription.getNotes());
+    // assertEquals(gedxSourceDescription.getNotes().size(), 1);
+    // assertEquals(gedxSourceDescription.getNotes().get(0).getText().getValue()
+    // , "Microfilm genomen van de originele in het Gerechtshof te Brugge.\n" +
+    // "\n" +
+    // "Tekst in het Frans voor 1815.\n" +
+    // "\n" +
+    // "Met index.\n" +
+    // "\n" +
+    // "Tienjarige tafels op geboorten, huwelijken en overlijdens 1803-1813 zie Film
+    // 1226168 item 2. 1803-1813 1226169 item 1-2 1813-1823 1226173 item 2 " +
+    // "1823-1832 1226175 item 4. 1823-1832 1226176 item 1 1833-1842 1226179 item
+    // 1-2 1843-1850 1226182 item 3-4. 1850-1860 1226185 item 3. " +
+    // "1850-1860 1226236 item 1 1860-1870 1226239 item 3. 1860-1870 1226240 item
+    // 1-2 1871-1880 1358895 item 2 1881-1890 1383016 item 3. " +
+    // "Geboorten, huwelijken 1881-1890 1383017 item 1 Overlijdens 1891-1900 1383021
+    // item 2\n" +
+    // "\n" +
+    // "Civil registration of births, marriages and deaths of Brugge, West Flanders,
+    // Belgium. Includes marriage proclamations, indexes, and supplements. Text in
+    // French before 1815.");
     assertNull(gedxSourceDescription.getExtensionElements());
   }
 
@@ -100,15 +115,19 @@ public class SourceDescriptionMapperDescriptionTest {
     assertEquals(gedxSourceDescription.getId(), "SOUR2");
     assertNotNull(gedxSourceDescription.getCitation());
     assertEquals(gedxSourceDescription.getCitation().getValue(), "__callno__, __callno__specdeviation__.");
-    assertEquals(gedxSourceDescription.getCitation().getCitationTemplate().getResource().toString(), "gedcom5:citation-template");
+    assertEquals(gedxSourceDescription.getCitation().getCitationTemplate().getResource().toString(),
+        "gedcom5:citation-template");
     assertNotNull(gedxSourceDescription.getCitation().getFields());
     assertEquals(gedxSourceDescription.getCitation().getFields().size(), 2);
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getName().toURI().toString(), "gedcom5:citation-template/call-number");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getName().toURI().toString(),
+        "gedcom5:citation-template/call-number");
     assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getValue(), "__callno__");
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(1).getName().toURI().toString(), "gedcom5:citation-template/call-number");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(1).getName().toURI().toString(),
+        "gedcom5:citation-template/call-number");
     assertEquals(gedxSourceDescription.getCitation().getFields().get(1).getValue(), "__callno__specdeviation__");
     assertNull(gedxSourceDescription.getAbout());
-    assertEquals(gedxSourceDescription.getMediator().getResource().toURI().toString(), CommonMapper.getOrganizationReference(gedxSourceDescription.getId() + ".REPO"));
+    assertEquals(gedxSourceDescription.getMediator().getResource().toURI().toString(),
+        CommonMapper.getOrganizationReference(gedxSourceDescription.getId() + ".REPO"));
     assertNull(gedxSourceDescription.getSources());
     assertNull(gedxSourceDescription.getComponentOf());
     assertNull(gedxSourceDescription.getTitles());
@@ -140,10 +159,12 @@ public class SourceDescriptionMapperDescriptionTest {
     assertEquals(gedxSourceDescription.getId(), "SOUR18");
     assertNotNull(gedxSourceDescription.getCitation());
     assertEquals(gedxSourceDescription.getCitation().getValue(), "__sour18_titl__.");
-    assertEquals(gedxSourceDescription.getCitation().getCitationTemplate().getResource().toURI().toString(), "gedcom5:citation-template");
+    assertEquals(gedxSourceDescription.getCitation().getCitationTemplate().getResource().toURI().toString(),
+        "gedcom5:citation-template");
     assertNotNull(gedxSourceDescription.getCitation().getFields());
     assertEquals(gedxSourceDescription.getCitation().getFields().size(), 1);
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getName().toURI().toString(), "gedcom5:citation-template/title");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getName().toURI().toString(),
+        "gedcom5:citation-template/title");
     assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getValue(), "__sour18_titl__");
     assertNull(gedxSourceDescription.getAbout());
     assertEquals(gedxSourceDescription.getMediator().getResource().toURI().toString(), "#REPO1");
@@ -169,10 +190,12 @@ public class SourceDescriptionMapperDescriptionTest {
     assertEquals(gedxSourceDescription.getId(), "SOUR19");
     assertNotNull(gedxSourceDescription.getCitation());
     assertEquals(gedxSourceDescription.getCitation().getValue(), "__sour19_titl__.");
-    assertEquals(gedxSourceDescription.getCitation().getCitationTemplate().getResource().toURI().toString(), "gedcom5:citation-template");
+    assertEquals(gedxSourceDescription.getCitation().getCitationTemplate().getResource().toURI().toString(),
+        "gedcom5:citation-template");
     assertNotNull(gedxSourceDescription.getCitation().getFields());
     assertEquals(gedxSourceDescription.getCitation().getFields().size(), 1);
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getName().toURI().toString(), "gedcom5:citation-template/title");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getName().toURI().toString(),
+        "gedcom5:citation-template/title");
     assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getValue(), "__sour19_titl__");
     assertNull(gedxSourceDescription.getAbout());
     assertNull(gedxSourceDescription.getMediator());
@@ -198,10 +221,12 @@ public class SourceDescriptionMapperDescriptionTest {
     assertEquals(gedxSourceDescription.getId(), "SOUR20");
     assertNotNull(gedxSourceDescription.getCitation());
     assertEquals(gedxSourceDescription.getCitation().getValue(), "__sour20_titl__.");
-    assertEquals(gedxSourceDescription.getCitation().getCitationTemplate().getResource().toString(), "gedcom5:citation-template");
+    assertEquals(gedxSourceDescription.getCitation().getCitationTemplate().getResource().toString(),
+        "gedcom5:citation-template");
     assertNotNull(gedxSourceDescription.getCitation().getFields());
     assertEquals(gedxSourceDescription.getCitation().getFields().size(), 1);
-    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getName().toURI().toString(), "gedcom5:citation-template/title");
+    assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getName().toURI().toString(),
+        "gedcom5:citation-template/title");
     assertEquals(gedxSourceDescription.getCitation().getFields().get(0).getValue(), "__sour20_titl__");
     assertNull(gedxSourceDescription.getAbout());
     assertNull(gedxSourceDescription.getMediator());

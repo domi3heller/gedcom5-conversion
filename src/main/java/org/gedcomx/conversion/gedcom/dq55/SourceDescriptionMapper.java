@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class SourceDescriptionMapper {
   private static final Logger logger = LoggerFactory.getLogger(CommonMapper.class);
 
@@ -50,8 +49,7 @@ public class SourceDescriptionMapper {
 
       if (dqSource.getAbbreviation() != null) {
         gedxSourceDescription.setTitles(Arrays.asList(new TextValue(dqSource.getAbbreviation())));
-      }
-      else if (dqSource.getTitle() != null) {
+      } else if (dqSource.getTitle() != null) {
         gedxSourceDescription.setTitles(Arrays.asList(new TextValue(dqSource.getTitle())));
       }
 
@@ -65,7 +63,8 @@ public class SourceDescriptionMapper {
         field.setName(URI.create("gedcom5:citation-template/author"));
         field.setValue(dqSource.getAuthor());
         citation.getFields().add(field);
-        citation.setValue(citation.getValue() + (citation.getValue().length() > 0 ? ", " + dqSource.getAuthor() : dqSource.getAuthor()));
+        citation.setValue(citation.getValue()
+            + (citation.getValue().length() > 0 ? ", " + dqSource.getAuthor() : dqSource.getAuthor()));
       }
 
       if (dqSource.getTitle() != null) {
@@ -73,7 +72,8 @@ public class SourceDescriptionMapper {
         field.setName(URI.create("gedcom5:citation-template/title"));
         field.setValue(dqSource.getTitle());
         citation.getFields().add(field);
-        citation.setValue(citation.getValue() + (citation.getValue().length() > 0 ? ", " + dqSource.getTitle() : dqSource.getTitle()));
+        citation.setValue(citation.getValue()
+            + (citation.getValue().length() > 0 ? ", " + dqSource.getTitle() : dqSource.getTitle()));
       }
 
       if (dqSource.getPublicationFacts() != null) {
@@ -81,11 +81,14 @@ public class SourceDescriptionMapper {
         field.setName(URI.create("gedcom5:citation-template/publication-facts"));
         field.setValue(dqSource.getPublicationFacts());
         citation.getFields().add(field);
-        citation.setValue(citation.getValue() + (citation.getValue().length() > 0 ? ", " + dqSource.getPublicationFacts() : dqSource.getPublicationFacts()));
+        citation
+            .setValue(citation.getValue() + (citation.getValue().length() > 0 ? ", " + dqSource.getPublicationFacts()
+                : dqSource.getPublicationFacts()));
       }
 
       if (dqSource.getText() != null) {
-        logger.warn(ConversionContext.getContext(), "GEDCOM X does not currently support text extracted from a source.");
+        logger.warn(ConversionContext.getContext(),
+            "GEDCOM X does not currently support text extracted from a source.");
       }
 
       if (dqSource.getRepositoryRef() != null) {
@@ -94,10 +97,10 @@ public class SourceDescriptionMapper {
         try {
           RepositoryRef dqRepositoryRef = dqSource.getRepositoryRef();
           if (dqRepositoryRef.getRef() != null) {
-            gedxSourceDescription.setMediator(new ResourceReference(URI.create(CommonMapper.getOrganizationReference(dqRepositoryRef.getRef()))));
+            gedxSourceDescription.setMediator(
+                new ResourceReference(URI.create(CommonMapper.getOrganizationReference(dqRepositoryRef.getRef()))));
             // TODO: map NOTEs as another note associated with this SourceDescription
-          }
-          else {
+          } else {
             String inlineRepoId = dqSource.getId() + ".REPO";
             Agent gedxOrganization = new Agent();
             gedxOrganization.setId(inlineRepoId);
@@ -107,10 +110,13 @@ public class SourceDescriptionMapper {
               gedxOrganization.addExtensionElement(gedxNote);
             }
             for (NoteRef dqNoteRef : dqRepositoryRef.getNoteRefs()) {
-              logger.warn(ConversionContext.getContext(), "Unable to associate a note ({}) with the inline-defined organization ({})", dqNoteRef.getRef(), inlineRepoId);
+              logger.warn(ConversionContext.getContext(),
+                  "Unable to associate a note ({}) with the inline-defined organization ({})", dqNoteRef.getRef(),
+                  inlineRepoId);
             }
             result.addOrganization(gedxOrganization);
-            gedxSourceDescription.setMediator(new ResourceReference(URI.create(CommonMapper.getOrganizationReference(inlineRepoId))));
+            gedxSourceDescription
+                .setMediator(new ResourceReference(URI.create(CommonMapper.getOrganizationReference(inlineRepoId))));
           }
 
           if (dqRepositoryRef.getCallNumber() != null) {
@@ -118,10 +124,11 @@ public class SourceDescriptionMapper {
             field.setName(URI.create("gedcom5:citation-template/call-number"));
             field.setValue(dqRepositoryRef.getCallNumber());
             citation.getFields().add(field);
-            citation.setValue(citation.getValue() + (citation.getValue().length() > 0 ? ", " + dqRepositoryRef.getCallNumber() : dqRepositoryRef.getCallNumber()));
+            citation.setValue(
+                citation.getValue() + (citation.getValue().length() > 0 ? ", " + dqRepositoryRef.getCallNumber()
+                    : dqRepositoryRef.getCallNumber()));
           }
-        }
-        finally {
+        } finally {
           ConversionContext.removeReference(repoContext);
         }
       }
@@ -131,7 +138,8 @@ public class SourceDescriptionMapper {
         field.setName(URI.create("gedcom5:citation-template/call-number"));
         field.setValue(dqSource.getCallNumber());
         citation.getFields().add(field);
-        citation.setValue(citation.getValue() + (citation.getValue().length() > 0 ? ", " + dqSource.getCallNumber() : dqSource.getCallNumber()));
+        citation.setValue(citation.getValue()
+            + (citation.getValue().length() > 0 ? ", " + dqSource.getCallNumber() : dqSource.getCallNumber()));
       }
 
       if (citation.getValue().length() > 0) {
@@ -139,7 +147,7 @@ public class SourceDescriptionMapper {
         gedxSourceDescription.setCitations(Arrays.asList(citation));
       }
 
-      // dqSource.getMediaType();  // nothing equivalent in the GEDCOM X model
+      // dqSource.getMediaType(); // nothing equivalent in the GEDCOM X model
 
       int cntNotes = dqSource.getNotes().size() + dqSource.getNoteRefs().size();
       if (cntNotes > 0) {
@@ -148,7 +156,8 @@ public class SourceDescriptionMapper {
 
       int cntMedia = dqSource.getMedia().size() + dqSource.getMediaRefs().size();
       if (cntMedia > 0) {
-        logger.warn(ConversionContext.getContext(), "Did not process {} media items or references to media items.", cntMedia);
+        logger.warn(ConversionContext.getContext(), "Did not process {} media items or references to media items.",
+            cntMedia);
       }
 
       if (dqSource.getType() != null) {
@@ -161,14 +170,17 @@ public class SourceDescriptionMapper {
       if (dqSource.getDate() != null) {
         Marker dateContext = ConversionContext.getDetachedMarker("DATE");
         ConversionContext.addReference(dateContext);
-        logger.warn(ConversionContext.getContext(), "Specificaton does not define the meaning of DATE in this context; value ({}) was ignored.", dqSource.getDate());
+        logger.warn(ConversionContext.getContext(),
+            "Specificaton does not define the meaning of DATE in this context; value ({}) was ignored.",
+            dqSource.getDate());
         ConversionContext.removeReference(dateContext);
       }
 
       if (dqSource.getReferenceNumber() != null) {
         Marker refnContext = ConversionContext.getDetachedMarker("REFN");
         ConversionContext.addReference(refnContext);
-        logger.warn(ConversionContext.getContext(), "User reference number ({}) was ignored.", dqSource.getReferenceNumber());
+        logger.warn(ConversionContext.getContext(), "User reference number ({}) was ignored.",
+            dqSource.getReferenceNumber());
         ConversionContext.removeReference(refnContext);
       }
 
@@ -187,17 +199,17 @@ public class SourceDescriptionMapper {
         for (String extensionCategory : dqSource.getExtensions().keySet()) {
           for (GedcomTag tag : ((List<GedcomTag>) dqSource.getExtension(extensionCategory))) {
             logger.warn(ConversionContext.getContext(), "Unsupported ({}): {}", extensionCategory, tag);
-            // DATA tag (and subordinates) in GEDCOM 5.5. SOURCE_RECORD not being looked for or parsed by DallanQ code
+            // DATA tag (and subordinates) in GEDCOM 5.5. SOURCE_RECORD not being looked for
+            // or parsed by DallanQ code
           }
         }
       }
 
-      //dqSource.getItalic(); // PAF extension elements; will not process
-      //dqSource.getParen();  // PAF extension elements; will not process
+      // dqSource.getItalic(); // PAF extension elements; will not process
+      // dqSource.getParen(); // PAF extension elements; will not process
 
       result.addSourceDescription(gedxSourceDescription);
-    }
-    finally {
+    } finally {
       ConversionContext.removeReference(sourceContext);
     }
   }
@@ -208,15 +220,9 @@ public class SourceDescriptionMapper {
     try {
       Agent gedxOrganization = new Agent();
 
-      CommonMapper.populateAgent(gedxOrganization
-        , dqRepository.getId()
-        , dqRepository.getName()
-        , dqRepository.getAddress()
-        , dqRepository.getPhone()
-        , dqRepository.getFax()
-        , dqRepository.getEmail()
-        , dqRepository.getWww()
-      );
+      CommonMapper.populateAgent(gedxOrganization, dqRepository.getId(), dqRepository.getName(),
+          dqRepository.getAddress(), dqRepository.getPhone(), dqRepository.getFax(), dqRepository.getEmail(),
+          dqRepository.getWww());
 
       int cntNotes = dqRepository.getNotes().size() + dqRepository.getNoteRefs().size();
       if (cntNotes > 0) {
@@ -228,7 +234,8 @@ public class SourceDescriptionMapper {
       }
 
       if (dqRepository.getValue() != null) {
-        logger.warn(ConversionContext.getContext(), "Unexpected repository value ({}) was ignored.", dqRepository.getValue());
+        logger.warn(ConversionContext.getContext(), "Unexpected repository value ({}) was ignored.",
+            dqRepository.getValue());
       }
 
       if (dqRepository.getExtensions().size() > 0) {
@@ -239,11 +246,11 @@ public class SourceDescriptionMapper {
         }
       }
 
-      //dqRepository.getAllNotes(); // notes not handled via this method; see getNotes and getNoteRefs
+      // dqRepository.getAllNotes(); // notes not handled via this method; see
+      // getNotes and getNoteRefs
 
       result.addOrganization(gedxOrganization);
-    }
-    finally {
+    } finally {
       ConversionContext.removeReference(repositoryContext);
     }
   }

@@ -18,7 +18,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
-
 public class SubmitterMapperTest {
   private Gedcom gedcom;
 
@@ -39,12 +38,13 @@ public class SubmitterMapperTest {
     TestConversionResult result = new TestConversionResult();
     SubmitterMapper mapper = new SubmitterMapper();
 
-    // assert parts of the structure that give us code coverage but that are dropped by conversion process
+    // assert parts of the structure that give us code coverage but that are dropped
+    // by conversion process
     assertEquals(dqSubmitter.getValue(), "__spec_deviation__value__");
     assertEquals(dqSubmitter.getRin(), "12345");
-    assertEquals(((List<GedcomTag>)dqSubmitter.getExtensions().get("folg.more_tags")).size(), 1);
-    assertEquals(((List<GedcomTag>)dqSubmitter.getExtensions().get("folg.more_tags")).get(0).getTag(), "UID");
-    assertEquals(((List<GedcomTag>)dqSubmitter.getExtensions().get("folg.more_tags")).get(0).getValue(), "23456");
+    assertEquals(((List<GedcomTag>) dqSubmitter.getExtensions().get("folg.more_tags")).size(), 1);
+    assertEquals(((List<GedcomTag>) dqSubmitter.getExtensions().get("folg.more_tags")).get(0).getTag(), "UID");
+    assertEquals(((List<GedcomTag>) dqSubmitter.getExtensions().get("folg.more_tags")).get(0).getValue(), "23456");
 
     // execute conversion and test conversion outcome
     mapper.toContributor(dqSubmitter, result);
@@ -54,8 +54,7 @@ public class SubmitterMapperTest {
     assertEquals(gedxPerson.getId(), "SUBM1");
     assertEquals(gedxPerson.getName().getValue(), "Henri Herkimer Hofmeir");
     for (Address address : gedxPerson.getAddresses()) {
-      assertEquals(address.getValue()
-        , "1 Genealogist Way\n" +
+      assertEquals(address.getValue(), "1 Genealogist Way\n" +
           "Hometown, ZZ  99999\n" +
           "United States");
       assertNull(address.getStreet());
@@ -66,7 +65,8 @@ public class SubmitterMapperTest {
       assertNull(address.getPostalCode());
       assertNull(address.getCountry());
     }
-    assertEquals(Arrays.toString(gedxPerson.getPhones().toArray()), "[data:,Phone:%20935-555-1212, data:,Fax:%20935-555-0101]");
+    assertEquals(Arrays.toString(gedxPerson.getPhones().toArray()),
+        "[data:,Phone:%20935-555-1212, data:,Fax:%20935-555-0101]");
     assertEquals(Arrays.toString(gedxPerson.getEmails().toArray()), "[mailto:info@nospam.com]");
     assertEquals(gedxPerson.getHomepage().getResource().toString(), "http://nospam.com/");
 

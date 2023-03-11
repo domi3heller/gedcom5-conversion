@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class TestConversionResult implements GedcomxConversionResult {
 
   private Map<String, Map<String, String>> entryAttributes = new HashMap<String, Map<String, String>>();

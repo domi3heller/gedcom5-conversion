@@ -44,31 +44,34 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.xml.sax.SAXParseException;
 
-
 /**
  * Converts a GEDCOM 5.5 file to a GEDCOM X file
  */
 public class Gedcom2Gedcomx {
 
-  @Option(name = "-i", aliases = {"--input"}, usage = "GEDCOM 5.5 input file")
+  @Option(name = "-i", aliases = { "--input" }, usage = "GEDCOM 5.5 input file")
   private File gedcomIn;
 
-  @Option(name = "-ix", aliases = {"--inputx"}, usage = "GEDCOM X input file (experimental, used for benchmarking)")
+  @Option(name = "-ix", aliases = { "--inputx" }, usage = "GEDCOM X input file (experimental, used for benchmarking)")
   private File gedcomxIn;
 
-  @Option(name = "-o", aliases = {"--output"}, usage = "GEDCOM X output file")
+  @Option(name = "-o", aliases = { "--output" }, usage = "GEDCOM X output file")
   private File gedxOut;
 
-  @Option(name = "-fi", aliases = {"--filename-in-ids"}, usage = "Include the input filename in the person and relationship ids in the generated gedcomx")
+  @Option(name = "-fi", aliases = {
+      "--filename-in-ids" }, usage = "Include the input filename in the person and relationship ids in the generated gedcomx")
   private boolean includeFilenameInIds;
 
-  @Option(name = "-P", aliases = {"--pause"}, usage = "Pause before starting the conversion process (experimental, used for profiling)")
+  @Option(name = "-P", aliases = {
+      "--pause" }, usage = "Pause before starting the conversion process (experimental, used for profiling)")
   private boolean pause;
 
-  @Option(name = "-v", aliases = {"--verbose"}, usage = "Output all the warnings that are generated during the conversion.")
+  @Option(name = "-v", aliases = {
+      "--verbose" }, usage = "Output all the warnings that are generated during the conversion.")
   private boolean verbose;
 
-  @Option(name = "-vv", aliases = {"--very-verbose"}, usage = "Output all the warnings and informational messages that are generated during the conversion.")
+  @Option(name = "-vv", aliases = {
+      "--very-verbose" }, usage = "Output all the warnings and informational messages that are generated during the conversion.")
   private boolean vverbose;
 
   public Gedcom2Gedcomx() {
@@ -115,7 +118,8 @@ public class Gedcom2Gedcomx {
     }
 
     boolean gedxOutIsDirectory = false;
-    if ((gedxOut != null) && (gedxOut.isDirectory()) && (gedcomInIsDirectory) && (gedxOut.canRead()) && (gedxOut.canWrite()) && (gedxOut.canExecute())) {
+    if ((gedxOut != null) && (gedxOut.isDirectory()) && (gedcomInIsDirectory) && (gedxOut.canRead())
+        && (gedxOut.canWrite()) && (gedxOut.canExecute())) {
       gedxOutIsDirectory = true;
     }
 
@@ -181,7 +185,8 @@ public class Gedcom2Gedcomx {
     out.close();
   }
 
-  private void convert55File(File inFile, OutputStream outputStream, MappingConfig mappingConfig) throws SAXParseException, IOException {
+  private void convert55File(File inFile, OutputStream outputStream, MappingConfig mappingConfig)
+      throws SAXParseException, IOException {
     ModelParser modelParser = new ModelParser();
     Gedcom gedcom = modelParser.parseGedcom(inFile);
     gedcom.createIndexes();

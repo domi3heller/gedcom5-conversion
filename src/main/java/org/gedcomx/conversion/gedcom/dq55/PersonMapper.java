@@ -43,7 +43,6 @@ import org.slf4j.Marker;
 
 import org.familysearch.platform.ordinances.Ordinance;
 
-
 public class PersonMapper {
   private static final Logger logger = LoggerFactory.getLogger(CommonMapper.class);
 
@@ -82,7 +81,8 @@ public class PersonMapper {
           int cntNamesBeforeThisNameObj = gedxNames.size();
           gedxNames.addAll(toNameList(dqName, result));
           if ((cntNamesBeforeThisNameObj == 0) && (gedxNames.size() > 0)) {
-            // the first name encountered is assumed to be the preferred name per the recommendation given in the GEDCOM 5.5.1 specification
+            // the first name encountered is assumed to be the preferred name per the
+            // recommendation given in the GEDCOM 5.5.1 specification
             gedxNames.get(0).setPreferred(Boolean.TRUE);
           }
         } finally {
@@ -93,7 +93,6 @@ public class PersonMapper {
       if (gedxNames.size() > 0) {
         gedxPerson.setNames(gedxNames);
       }
-
 
       //////////////////////////////////////////////////////////////////////
       // Process facts
@@ -111,11 +110,10 @@ public class PersonMapper {
       List<SourceReference> sources = CommonMapper.toSourcesAndSourceReferences(dqPerson.getSourceCitations(), result);
       gedxPerson.setSources(sources);
 
-
       //////////////////////////////////////////////////////////////////////
       // Add the person to the conversion results
-      java.util.Date lastModified = CommonMapper.toDate(dqPerson.getChange()); //todo: set the timestamp on the attribution?
-
+      java.util.Date lastModified = CommonMapper.toDate(dqPerson.getChange()); // todo: set the timestamp on the
+                                                                               // attribution?
 
       //////////////////////////////////////////////////////////////////////
       // Warn about all fields we are not processing
@@ -133,11 +131,13 @@ public class PersonMapper {
       }
 
       if (dqPerson.getAncestorInterestSubmitterRef() != null) {
-        logger.warn(ConversionContext.getContext(), "Ancestor interest ignored: {}.", dqPerson.getAncestorInterestSubmitterRef());
+        logger.warn(ConversionContext.getContext(), "Ancestor interest ignored: {}.",
+            dqPerson.getAncestorInterestSubmitterRef());
       }
 
       if (dqPerson.getDescendantInterestSubmitterRef() != null) {
-        logger.warn(ConversionContext.getContext(), "Descendant interest ignored: {}.", dqPerson.getDescendantInterestSubmitterRef());
+        logger.warn(ConversionContext.getContext(), "Descendant interest ignored: {}.",
+            dqPerson.getDescendantInterestSubmitterRef());
       }
 
       if (dqPerson.getAddress() != null) {
@@ -175,14 +175,16 @@ public class PersonMapper {
 
       int cntMedia = dqPerson.getMedia().size() + dqPerson.getMediaRefs().size();
       if (cntMedia > 0) {
-        logger.warn(ConversionContext.getContext(), "Did not process {} media items or references to media items.", cntMedia);
+        logger.warn(ConversionContext.getContext(), "Did not process {} media items or references to media items.",
+            cntMedia);
       }
 
       if (dqPerson.getExtensions().size() > 0) {
         for (String extensionCategory : dqPerson.getExtensions().keySet()) {
-          for (GedcomTag tag : ((List<GedcomTag>)dqPerson.getExtension(extensionCategory))) {
+          for (GedcomTag tag : ((List<GedcomTag>) dqPerson.getExtension(extensionCategory))) {
             logger.warn(ConversionContext.getContext(), "Unsupported ({}): {}", extensionCategory, tag);
-            // DATA tag (and subordinates) in GEDCOM 5.5. SOURCE_RECORD not being looked for or parsed by DallanQ code
+            // DATA tag (and subordinates) in GEDCOM 5.5. SOURCE_RECORD not being looked for
+            // or parsed by DallanQ code
           }
         }
       }
@@ -197,26 +199,27 @@ public class PersonMapper {
     }
   }
 
-  private void processFacts(Person gedxPerson, List<EventFact> facts, GedcomxConversionResult result) throws IOException {
-    if(facts == null) {
+  private void processFacts(Person gedxPerson, List<EventFact> facts, GedcomxConversionResult result)
+      throws IOException {
+    if (facts == null) {
       return;
     }
 
     int index = 0;
-    for(EventFact fact : facts) {
+    for (EventFact fact : facts) {
       Marker factContext = ConversionContext.getDetachedMarker(fact.getTag() + '.' + (++index));
       ConversionContext.addReference(factContext);
       try {
         Fact gedxFact = FactMapper.toFact(fact, result);
 
-        if(gedxFact == null) {
+        if (gedxFact == null) {
           fact.getType();
-          if(fact.getTag() != null && fact.getTag().equalsIgnoreCase("SEX")) {
+          if (fact.getTag() != null && fact.getTag().equalsIgnoreCase("SEX")) {
             processSex(gedxPerson, fact);
           }
         }
 
-        if(gedxFact != null) {
+        if (gedxFact != null) {
           gedxPerson.addFact(gedxFact);
         }
       } finally {
@@ -226,12 +229,12 @@ public class PersonMapper {
   }
 
   private void processOrdinances(Person gedxPerson, List<LdsOrdinance> ordinances) throws IOException {
-    if(ordinances == null) {
+    if (ordinances == null) {
       return;
     }
 
     int index = 0;
-    for(LdsOrdinance ordinance : ordinances) {
+    for (LdsOrdinance ordinance : ordinances) {
       Marker ordinanceContext = ConversionContext.getDetachedMarker(ordinance.getTag() + '.' + (++index));
       ConversionContext.addReference(ordinanceContext);
       try {
@@ -243,20 +246,17 @@ public class PersonMapper {
   }
 
   private void processSex(Person gedxPerson, EventFact fact) {
-    if(gedxPerson.getGender() != null) {
+    if (gedxPerson.getGender() != null) {
       logger.warn(ConversionContext.getContext(), "Missing gender designation");
     }
 
-    if(fact.getValue().equalsIgnoreCase("M")) {
+    if (fact.getValue().equalsIgnoreCase("M")) {
       gedxPerson.setGender(new Gender(GenderType.Male));
-    }
-    else if(fact.getValue().equalsIgnoreCase("F")) {
+    } else if (fact.getValue().equalsIgnoreCase("F")) {
       gedxPerson.setGender(new Gender(GenderType.Female));
-    }
-    else if(fact.getValue().equalsIgnoreCase("U")) {
+    } else if (fact.getValue().equalsIgnoreCase("U")) {
       gedxPerson.setGender(new Gender(GenderType.Unknown));
-    }
-    else  {
+    } else {
       logger.warn(ConversionContext.getContext(), "Unrecognized gender designation ({})", fact.getValue());
     }
   }
@@ -269,7 +269,7 @@ public class PersonMapper {
     }
 
     Name gedxName = new Name();
-    //gedxName.setId(); // no equivalent; probably system dependent anyway
+    // gedxName.setId(); // no equivalent; probably system dependent anyway
 
     gedxName.setNameForms(new ArrayList<NameForm>());
     NameForm primaryForm = new NameForm();
@@ -327,11 +327,12 @@ public class PersonMapper {
     }
 
     if ((dqName.getType() != null) && (dqName.getType().trim().length() > 0)) {
-      Marker nameTypeContext = ConversionContext.getDetachedMarker((dqName.getTypeTag() == null)?"Undetermined":dqName.getTypeTag());
+      Marker nameTypeContext = ConversionContext
+          .getDetachedMarker((dqName.getTypeTag() == null) ? "Undetermined" : dqName.getTypeTag());
       ConversionContext.addReference(nameTypeContext);
       logger.warn(ConversionContext.getContext(), "Name type ({}) was ignored.", dqName.getType());
-      //gedxName.setKnownType();
-      //gedxName.setType();
+      // gedxName.setKnownType();
+      // gedxName.setType();
       ConversionContext.removeReference(nameTypeContext);
     }
 
@@ -342,26 +343,31 @@ public class PersonMapper {
 
     int cntMedia = dqName.getMedia().size() + dqName.getMediaRefs().size();
     if (cntMedia > 0) {
-      logger.warn(ConversionContext.getContext(), "Did not process {} media items or references to media items.", cntMedia);
+      logger.warn(ConversionContext.getContext(), "Did not process {} media items or references to media items.",
+          cntMedia);
     }
-
 
     if (dqName.getExtensions().size() > 0) {
       for (String extensionCategory : dqName.getExtensions().keySet()) {
-        for (GedcomTag tag : ((List<GedcomTag>)dqName.getExtension(extensionCategory))) {
+        for (GedcomTag tag : ((List<GedcomTag>) dqName.getExtension(extensionCategory))) {
           logger.warn(ConversionContext.getContext(), "Unsupported ({}): {}", extensionCategory, tag);
         }
       }
     }
 
-    //dqName.getAkaTag() // data about GEDCOM 5.5 formatting that we will not preserve
-    //dqName.getTypeTag() // data about GEDCOM 5.5 formatting that we will not preserve
+    // dqName.getAkaTag() // data about GEDCOM 5.5 formatting that we will not
+    // preserve
+    // dqName.getTypeTag() // data about GEDCOM 5.5 formatting that we will not
+    // preserve
 
-    //dqName.getAllMedia(); // media not handled via this method; see getMedia and getMediaRefs
-    //dqName.getAllNotes(); // notes not handled via this method; see getNotes and getNoteRefs
+    // dqName.getAllMedia(); // media not handled via this method; see getMedia and
+    // getMediaRefs
+    // dqName.getAllNotes(); // notes not handled via this method; see getNotes and
+    // getNoteRefs
 
-    //gedxName.setAttribution(); // DallanQ parser currently chooses not to handle per-item SUBM references
-    //gedxName.setPreferred(); // handled outside this mapping method
+    // gedxName.setAttribution(); // DallanQ parser currently chooses not to handle
+    // per-item SUBM references
+    // gedxName.setPreferred(); // handled outside this mapping method
 
     return nameList;
   }
@@ -373,22 +379,22 @@ public class PersonMapper {
     }
 
     int indexOfSlash;
-    while ((indexOfSlash = value.indexOf('/')) >= 0){
-      // If both characters around the slash are not a space, replace the slash with a space, otherwise just remove it.
+    while ((indexOfSlash = value.indexOf('/')) >= 0) {
+      // If both characters around the slash are not a space, replace the slash with a
+      // space, otherwise just remove it.
       boolean replaceWithSpace = false;
-      if(indexOfSlash > 0 && indexOfSlash < value.length() - 1) {
+      if (indexOfSlash > 0 && indexOfSlash < value.length() - 1) {
         char c = value.charAt(indexOfSlash - 1);
-        if(c != ' ') {
+        if (c != ' ') {
           c = value.charAt(indexOfSlash + 1);
-          if(c != ' ') {
+          if (c != ' ') {
             replaceWithSpace = true;
           }
         }
       }
-      if(replaceWithSpace) {
+      if (replaceWithSpace) {
         value = replaceCharAt(value, indexOfSlash, ' ');
-      }
-      else {
+      } else {
         value = deleteCharAt(value, indexOfSlash);
       }
     }
@@ -434,16 +440,16 @@ public class PersonMapper {
   }
 
   private List<NamePart> newNamePartInstances(String value, NamePartType type) {
-    if(value == null) {
+    if (value == null) {
       return Collections.emptyList();
     }
 
     ArrayList<NamePart> nameParts = new ArrayList<NamePart>();
 
     String[] pieces = value.split(",\\s*");
-    for (String piece : pieces){
+    for (String piece : pieces) {
       piece = piece.trim();
-      if(!piece.equals("")) {
+      if (!piece.equals("")) {
         NamePart namePart = new NamePart();
         namePart.setKnownType(type);
         namePart.setValue(piece);
@@ -455,33 +461,29 @@ public class PersonMapper {
   }
 
   private String deleteCharAt(String value, int index) {
-    if(value == null || index < 0 || index >= value.length()) {
+    if (value == null || index < 0 || index >= value.length()) {
       return value;
     }
 
-    if(index == value.length() - 1) {
+    if (index == value.length() - 1) {
       return value.substring(0, index);
-    }
-    else if(index == 0) {
+    } else if (index == 0) {
       return value.substring(index + 1);
-    }
-    else {
+    } else {
       return value.substring(0, index) + value.substring(index + 1);
     }
   }
 
   private String replaceCharAt(String value, int index, char c) {
-    if(value == null || index < 0 || index >= value.length()) {
+    if (value == null || index < 0 || index >= value.length()) {
       return value;
     }
 
-    if(index == value.length() - 1) {
+    if (index == value.length() - 1) {
       return value.substring(0, index) + c;
-    }
-    else if(index == 0) {
+    } else if (index == 0) {
       return c + value.substring(index + 1);
-    }
-    else {
+    } else {
       return value.substring(0, index) + c + value.substring(index + 1);
     }
   }

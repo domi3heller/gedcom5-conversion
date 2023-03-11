@@ -18,7 +18,6 @@ package org.gedcomx.conversion.gedcom.dq55;
 import org.slf4j.Marker;
 import org.slf4j.helpers.BasicMarkerFactory;
 
-
 public class ConversionContext {
   private static final ThreadLocal<BasicMarkerFactory> factory;
 
@@ -27,19 +26,19 @@ public class ConversionContext {
   static {
 
     factory = new ThreadLocal<BasicMarkerFactory>() {
-        @Override
-        protected BasicMarkerFactory initialValue() {
-          synchronized (ConversionContext.class) {
-            return new BasicMarkerFactory();
-          }
+      @Override
+      protected BasicMarkerFactory initialValue() {
+        synchronized (ConversionContext.class) {
+          return new BasicMarkerFactory();
         }
-      };
+      }
+    };
     rootContext = new ThreadLocal<Marker>() {
-        @Override
-        protected Marker initialValue() {
-          return factory.get().getDetachedMarker("");
-        }
-      };
+      @Override
+      protected Marker initialValue() {
+        return factory.get().getDetachedMarker("");
+      }
+    };
   }
 
   public static Marker getDetachedMarker(String name) {
@@ -58,6 +57,6 @@ public class ConversionContext {
     return rootContext.get();
   }
 
-  private ConversionContext() { } // added to remove "major" sonar warning
-                                  // formatted to minimize impact on code coverage metrics
+  private ConversionContext() {
+  }
 }
