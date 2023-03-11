@@ -41,8 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
-import org.familysearch.platform.ordinances.Ordinance;
-
 public class PersonMapper {
   private static final Logger logger = LoggerFactory.getLogger(CommonMapper.class);
 
@@ -69,62 +67,22 @@ public class PersonMapper {
       Person gedxPerson = new Person();
       gedxPerson.setId(mappingConfig.createId(dqPerson.getId()));
 
-      //////////////////////////////////////////////////////////////////////
-      // Process NAMES
-
-      int index = 0;
-      List<Name> gedxNames = new ArrayList<Name>();
-      for (org.folg.gedcom.model.Name dqName : dqPerson.getNames()) {
-        Marker nameContext = ConversionContext.getDetachedMarker("NAME." + (++index));
-        ConversionContext.addReference(nameContext);
-        try {
-          int cntNamesBeforeThisNameObj = gedxNames.size();
-          gedxNames.addAll(toNameList(dqName, result));
-          if ((cntNamesBeforeThisNameObj == 0) && (gedxNames.size() > 0)) {
-            // the first name encountered is assumed to be the preferred name per the
-            // recommendation given in the GEDCOM 5.5.1 specification
-            gedxNames.get(0).setPreferred(Boolean.TRUE);
-          }
-        } finally {
-          ConversionContext.removeReference(nameContext);
-        }
-      }
-
-      if (gedxNames.size() > 0) {
-        gedxPerson.setNames(gedxNames);
-      }
-
-      //////////////////////////////////////////////////////////////////////
-      // Process facts
-
+      processNames(gedxPerson, dqPerson.getNames(), result);
       processFacts(gedxPerson, dqPerson.getEventsFacts(), result);
-
-      //////////////////////////////////////////////////////////////////////
-      // Process ordinances
-
       processOrdinances(gedxPerson, dqPerson.getLdsOrdinances());
+      processSources(gedxPerson, dqPerson.getSourceCitations(), result);
 
-      //////////////////////////////////////////////////////////////////////
-      // Process sources
-
-      List<SourceReference> sources = CommonMapper.toSourcesAndSourceReferences(dqPerson.getSourceCitations(), result);
-      gedxPerson.setSources(sources);
-
-      //////////////////////////////////////////////////////////////////////
-      // Add the person to the conversion results
       java.util.Date lastModified = CommonMapper.toDate(dqPerson.getChange()); // todo: set the timestamp on the
                                                                                // attribution?
 
-      //////////////////////////////////////////////////////////////////////
       // Warn about all fields we are not processing
-
-      if (dqPerson.getAssociations() != null && dqPerson.getAssociations().size() > 0) {
+      if (dqPerson.getAssociations() != null && !dqPerson.getAssociations().isEmpty()) {
         logger.warn(ConversionContext.getContext(), "Associations ignored.");
       }
       if (dqPerson.getRecordFileNumber() != null) {
         logger.warn(ConversionContext.getContext(), "Record file number ignored: {}", dqPerson.getRecordFileNumber());
       }
-      if (dqPerson.getReferenceNumbers() != null && dqPerson.getReferenceNumbers().size() > 0) {
+      if (dqPerson.getReferenceNumbers() != null && !dqPerson.getReferenceNumbers().isEmpty()) {
         for (String each : dqPerson.getReferenceNumbers()) {
           gedxPerson.addIdentifier(new Identifier().value(new URI(each)).type(new URI("USER_REFERENCE_NUMBER")));
         }
@@ -199,6 +157,35 @@ public class PersonMapper {
     }
   }
 
+  private void processNames(Person gedxPerson, List<org.folg.gedcom.model.Name> names, GedcomxConversionResult result)
+      throws IOException {
+    if (names == null) {
+      return;
+    }
+
+    int index = 0;
+    List<Name> gedxNames = new ArrayList<>();
+    for (org.folg.gedcom.model.Name dqName : names) {
+      Marker nameContext = ConversionContext.getDetachedMarker("NAME." + (++index));
+      ConversionContext.addReference(nameContext);
+      try {
+        int cntNamesBeforeThisNameObj = gedxNames.size();
+        gedxNames.addAll(toNameList(dqName, result));
+        if ((cntNamesBeforeThisNameObj == 0) && (!gedxNames.isEmpty())) {
+          // the first name encountered is assumed to be the preferred name per the
+          // recommendation given in the GEDCOM 5.5.1 specification
+          gedxNames.get(0).setPreferred(Boolean.TRUE);
+        }
+      } finally {
+        ConversionContext.removeReference(nameContext);
+      }
+    }
+
+    if (!gedxNames.isEmpty()) {
+      gedxPerson.setNames(gedxNames);
+    }
+  }
+
   private void processFacts(Person gedxPerson, List<EventFact> facts, GedcomxConversionResult result)
       throws IOException {
     if (facts == null) {
@@ -245,6 +232,16 @@ public class PersonMapper {
     }
   }
 
+  private void processSources(Person gedxPerson, List<SourceCitation> sourceCitations, GedcomxConversionResult result)
+      throws IOException {
+    if (sourceCitations == null) {
+      return;
+    }
+
+    List<SourceReference> sources = CommonMapper.toSourcesAndSourceReferences(sourceCitations, result);
+    gedxPerson.setSources(sources);
+  }
+
   private void processSex(Person gedxPerson, EventFact fact) {
     if (gedxPerson.getGender() != null) {
       logger.warn(ConversionContext.getContext(), "Missing gender designation");
@@ -262,7 +259,7 @@ public class PersonMapper {
   }
 
   private List<Name> toNameList(org.folg.gedcom.model.Name dqName, GedcomxConversionResult result) throws IOException {
-    List<Name> nameList = new ArrayList<Name>();
+    List<Name> nameList = new ArrayList<>();
 
     if (dqName == null) {
       return nameList;
@@ -271,7 +268,7 @@ public class PersonMapper {
     Name gedxName = new Name();
     // gedxName.setId(); // no equivalent; probably system dependent anyway
 
-    gedxName.setNameForms(new ArrayList<NameForm>());
+    gedxName.setNameForms(new ArrayList<>());
     NameForm primaryForm = new NameForm();
     primaryForm.setFullText(getNameValue(dqName));
     List<NamePart> parts = getNameParts(dqName);
@@ -321,7 +318,7 @@ public class PersonMapper {
       nameList.add(gedxAka);
     }
 
-    if ((dqName.getSourceCitations() != null) && (dqName.getSourceCitations().size() > 0)) {
+    if ((dqName.getSourceCitations() != null) && (!dqName.getSourceCitations().isEmpty())) {
       List<SourceReference> sources = CommonMapper.toSourcesAndSourceReferences(dqName.getSourceCitations(), result);
       gedxName.setSources(sources);
     }
@@ -402,14 +399,14 @@ public class PersonMapper {
   }
 
   private List<NamePart> getNameParts(org.folg.gedcom.model.Name dqName) {
-    List<NamePart> nameParts = new ArrayList<NamePart>(4);
+    List<NamePart> nameParts = new ArrayList<>(4);
 
     nameParts.addAll(newNamePartInstances(dqName.getPrefix(), NamePartType.Prefix));
     nameParts.addAll(newNamePartInstances(dqName.getGiven(), NamePartType.Given));
     nameParts.addAll(newNamePartInstances(getSurname(dqName), NamePartType.Surname));
     nameParts.addAll(newNamePartInstances(dqName.getSuffix(), NamePartType.Suffix));
 
-    return nameParts.size() > 0 ? nameParts : null;
+    return nameParts.isEmpty() ? null : nameParts;
   }
 
   private String getSurname(org.folg.gedcom.model.Name dqName) {
@@ -444,7 +441,7 @@ public class PersonMapper {
       return Collections.emptyList();
     }
 
-    ArrayList<NamePart> nameParts = new ArrayList<NamePart>();
+    ArrayList<NamePart> nameParts = new ArrayList<>();
 
     String[] pieces = value.split(",\\s*");
     for (String piece : pieces) {
